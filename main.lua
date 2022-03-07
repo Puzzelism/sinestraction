@@ -107,10 +107,11 @@ function love.draw()
         lg.print("[UP/DOWN] SCALE: "..SIN_SCALE,0,0);
         lg.print("[+/-] MOVE: "..MOVE_FACTOR,0,16)
         lg.print("[<-/->] FREQ: "..FREQ,0,32);
-        lg.print("[SPACE] SHADOW: "..(SHADOW and 'HI' or 'LO'),0,48);
+        lg.print("[A/D] HEIGHT: "..HEIGHT,0,48)
         lg.print("[LSHIFT] WIRE: "..(WIREFRAME and ('['..(cosine and SPLIT_FACTOR*2 or SPLIT_FACTOR)..' NODES, W/S to mod]') or 'LO'), 0, 64)
         lg.print("[TAB] VIEW_COS: "..(COSINE and 'HI' or 'LO'), 0, 80)
         lg.print("FULLSCRN [ENTER]", w/2-120, 16)
+        lg.print((SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-138, 32)
         
         lg.setColor(versionColor);
         lg.print("v"..VERSION, w/4-20, h/2-40)
@@ -120,13 +121,13 @@ function love.draw()
     end
     lg.setColor(MENU and fontColor or shadowColor)
     lg.print("MENU [ALT]", w/2-74, 0)
-    lg.print(love.timer.getFPS().."fps", w/2-40, (MENU and 32 or 16))
+    lg.print(love.timer.getFPS().."fps", w/2-40, (MENU and 48 or 16))
     
     -- wave render
     for i = 0,SPLIT_FACTOR do
         if(COSINE)then
             lg.setColor(cosColor)
-            lg.rectangle((WIREFRAME and 'line' or 'fill'), i*sliceW, points2[i], sliceW, HEIGHT);
+            lg.rectangle((WIREFRAME and 'line' or 'fill'), i*sliceW, points2[i], sliceW, HEIGHT-5);
         end
         if(SHADOW)then
             lg.setColor(shadowColor);
