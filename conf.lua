@@ -4,7 +4,7 @@ HEIGHT = 600;
 function love.conf(t)
     t.version = "11.4"
 
-    t.window.title = "Stang Test"
+    t.window.title = "SINESTRACTION"
 
     t.window.width = WIDTH
     t.window.height = HEIGHT
@@ -13,6 +13,6 @@ function love.conf(t)
 
     t.window.resizable = true
     t.window.fullscreen = false
-    
+
     t.window.fullscreentype = "exclusive"
 end
