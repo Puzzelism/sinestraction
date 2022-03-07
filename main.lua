@@ -86,8 +86,8 @@ function love.keypressed(key)
     elseif(key == "s")then
         SPLIT_FACTOR = SPLIT_FACTOR - 10;
     elseif(key == "return")then
-		fullscreen = not fullscreen
-		love.window.setFullscreen(fullscreen, fstype)
+	    fullscreen = not fullscreen
+	    love.window.setFullscreen(fullscreen, fstype)
 	end
 end
 
@@ -105,14 +105,16 @@ function love.draw()
         lg.print("[SPACE] SHADOW: "..(SHADOW and 'HI' or 'LO'),0,48);
         lg.print("[LSHIFT] WIRE: "..(WIREFRAME and ('['..(cosine and SPLIT_FACTOR*2 or SPLIT_FACTOR)..' NODES, W/S to mod]') or 'LO'), 0, 64)
         lg.print("[TAB] VIEW_COS: "..(COSINE and 'HI' or 'LO'), 0, 80)
-        lg.print(love.timer.getFPS().."fps", w/2-40, 16)
+        lg.print("FULLSCRN [ENTER]", w/2-120, 16)
         
         lg.setColor(versionColor);
         lg.print("v"..VERSION, w/4-20, h/2-40)
         lg.setColor(shadowColor);
         lg.print("made by puzzel 2022", w/4-64, h/2-16)
     end
+    lg.setColor(MENU and fontColor or shadowColor)
     lg.print("MENU [ALT]", w/2-74, 0)
+    lg.print(love.timer.getFPS().."fps", w/2-40, (MENU and 32 or 16))
     
     -- wave render
     for i = 0,SPLIT_FACTOR do
