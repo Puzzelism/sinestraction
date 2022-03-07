@@ -127,7 +127,7 @@ function love.update(dt)
     -- update waves
     for x = 0,SPLIT_FACTOR do
         sined = OFFSET+(math.sin(x*FREQ+move)*SIN_SCALE)
-        cosined = (OFFSET-5)+(math.cos(x*FREQ-move)*SIN_SCALE)
+        cosined = (-OFFSET)+(math.cos(x*FREQ-move)*SIN_SCALE)
         points[x] = (lg.getHeight()/4)-20 + sined;
         points2[x] = (lg.getHeight()/4)-20 + cosined;
     end
@@ -147,6 +147,7 @@ function love.keypressed(key)
     elseif(key == "return")then fullscreen = not fullscreen love.window.setFullscreen(fullscreen, fstype)
 	elseif(key == "d")then HEIGHT = HEIGHT + 10;
     elseif(key == "a")then HEIGHT = HEIGHT - 10;
+    elseif(key == "q")then 
     elseif(key == "1")then randomizeColors(1);
     elseif(key == "2")then randomizeColors(2);
     elseif(key == "3")then randomizeColors(7);
@@ -176,7 +177,7 @@ function love.draw()
         lg.print("[+/-] MOVE: "..MOVE_FACTOR,0,16)
         lg.print("[<-/->] FREQ: "..FREQ,0,32);
         lg.print("[A/D] HEIGHT: "..HEIGHT,0,48)
-        lg.print("[LSHIFT] WIRE: "..(WIREFRAME and ('['..(cosine and SPLIT_FACTOR*2 or SPLIT_FACTOR)..' NODES, W/S to mod]') or 'LO'), 0, 64)
+        lg.print("[LSHIFT] WIRE: "..(WIREFRAME and ('['..(COSINE and SPLIT_FACTOR*2 or SPLIT_FACTOR)..' NODES, W/S to mod]') or 'LO'), 0, 64)
         lg.print("[TAB] VIEW_COS: "..(COSINE and 'HI' or 'LO'), 0, 80)
         lg.print("FULLSCRN [ENTER]", w/2-120, 16)
         lg.print((SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-138, 32)
