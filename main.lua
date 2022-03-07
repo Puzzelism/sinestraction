@@ -7,9 +7,11 @@
 lg = love.graphics;
 lk = love.keyboard;
 lm = love.math;
+ls = love.sound;
+la = love.audio;
 
 -- version
-VERSION = "0.1.0";
+VERSION = "0.1.1";
 
 --colors
 function resetColors() -- ID
@@ -50,11 +52,45 @@ function reload()
     MOVE_FACTOR = 1;
     FREQ = 0.25;
     HEIGHT = 40;
+    AUDIO_TIMER_MAX = 20;
+    AUDIO_TIMER = AUDIO_TIMER_MAX;
     move = MOVE_FACTOR;
-        
+
+    --audio
+    la.setVolume(0.25);
+    select1 = ls.newSoundData("res/select1.wav")
+    select2 = ls.newSoundData("res/select2.wav")
+    select3 = ls.newSoundData("res/select3.wav")
+    synth1 = ls.newSoundData("res/laser1.wav")
+    synth2 = ls.newSoundData("res/laser2.wav")
+    synth3 = ls.newSoundData("res/laser3.wav")
+
+    synthSnd = {
+        la.newSource(synth1, stream), 
+        la.newSource(synth2, stream),
+        la.newSource(synth3, stream),
+    }
+    selectSnd = {
+        la.newSource(select1, static),
+        la.newSource(select2, static),
+        la.newSource(select3, static),
+    }
+
     -- init arrays
     points = {};
     points2 = {};
+end
+
+function playSelect(sound)
+    soundTick = lm.random()
+    if(AUDIO_TIMER < 0)then
+        if(soundTick < 0.3) then sound[1]:play()
+        elseif(soundTick > 0.3 and soundTick < 0.7)then sound[2]:play()
+        elseif(soundTick > 0.7)then sound[3]:play()
+        end
+        AUDIO_TIMER = AUDIO_TIMER_MAX
+    end
+    print(soundTick);
 end
 
 function love.load()
@@ -66,14 +102,18 @@ function love.update(dt)
     -- scaling
     if(lk.isDown("up"))then
         SIN_SCALE = SIN_SCALE + 5;
+        playSelect(synthSnd)
     elseif(lk.isDown("down"))then
         SIN_SCALE = SIN_SCALE - 5;
+        playSelect(synthSnd)
     end
     -- frequency
     if(lk.isDown("right"))then
         FREQ = FREQ +(0.005);
+        playSelect(synthSnd)
     elseif(lk.isDown("left"))then
         FREQ = FREQ - (0.005);
+        playSelect(synthSnd)
     end
 
     -- get env variables
@@ -81,6 +121,7 @@ function love.update(dt)
     h = lg.getHeight();
     sliceW = w / SPLIT_FACTOR;
     move = move + (MOVE_FACTOR * dt);
+    AUDIO_TIMER = AUDIO_TIMER-1
 
     -- update waves
     for x = 0,SPLIT_FACTOR do
@@ -92,6 +133,7 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
+    playSelect(selectSnd)
     if(key == "escape")then love.event.quit()
     elseif(key == "space")then SHADOW = not SHADOW
     elseif(key == "=")then  MOVE_FACTOR = MOVE_FACTOR + 1;
