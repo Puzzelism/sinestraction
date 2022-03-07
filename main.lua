@@ -30,6 +30,7 @@ function love.load()
     SIN_SCALE = 30;
     MOVE_FACTOR = 1;
     FREQ = 0.25;
+    HEIGHT = 40;
     move = MOVE_FACTOR;
     
     -- init arrays
@@ -88,7 +89,11 @@ function love.keypressed(key)
     elseif(key == "return")then
 	    fullscreen = not fullscreen
 	    love.window.setFullscreen(fullscreen, fstype)
-	end
+	elseif(key == "d")then
+        HEIGHT = HEIGHT + 10;
+    elseif(key == "a")then
+        HEIGHT = HEIGHT - 10;
+    end
 end
 
 function love.draw()
@@ -111,6 +116,7 @@ function love.draw()
         lg.print("v"..VERSION, w/4-20, h/2-40)
         lg.setColor(shadowColor);
         lg.print("made by puzzel 2022", w/4-64, h/2-16)
+        
     end
     lg.setColor(MENU and fontColor or shadowColor)
     lg.print("MENU [ALT]", w/2-74, 0)
@@ -120,13 +126,13 @@ function love.draw()
     for i = 0,SPLIT_FACTOR do
         if(COSINE)then
             lg.setColor(cosColor)
-            lg.rectangle((WIREFRAME and 'line' or 'fill'), i*sliceW, points2[i], sliceW, 40);
+            lg.rectangle((WIREFRAME and 'line' or 'fill'), i*sliceW, points2[i], sliceW, HEIGHT);
         end
         if(SHADOW)then
             lg.setColor(shadowColor);
-            lg.rectangle("fill", i*sliceW+4, points[i]+4, sliceW, 40);
+            lg.rectangle("fill", i*sliceW+4, points[i]+4, sliceW, HEIGHT);
         end
         lg.setColor(sinColor);
-        lg.rectangle((WIREFRAME and 'line' or 'fill'), i*sliceW, points[i], sliceW, 40);
+        lg.rectangle((WIREFRAME and 'line' or 'fill'), i*sliceW, points[i], sliceW, HEIGHT);
     end
 end
