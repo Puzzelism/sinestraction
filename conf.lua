@@ -4,6 +4,8 @@ HEIGHT = 600;
 function love.conf(t)
     t.version = "11.4"
 
+    t.window.icon = "res/icon.png"
+
     t.window.title = "SINESTRACTION"
 
     t.window.width = WIDTH
