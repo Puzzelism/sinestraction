@@ -127,7 +127,7 @@ function love.update(dt)
     -- update waves
     for x = 0,SPLIT_FACTOR do
         sined = OFFSET+(math.sin(x*FREQ+move)*SIN_SCALE)
-        cosined = (-OFFSET)+(math.cos(x*FREQ-move)*SIN_SCALE)
+        cosined = 10+(-OFFSET)+(math.cos(x*FREQ-move)*SIN_SCALE)
         points[x] = (lg.getHeight()/4)-20 + sined;
         points2[x] = (lg.getHeight()/4)-20 + cosined;
     end
