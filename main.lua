@@ -25,6 +25,8 @@ fontColor = {1, 1, 1}
 versionColor = {1, 1, 0}
 
 function love.load()
+    love.window.setMode(800, 640, {resizable = true, minwidth=600, minheight=600});
+
     -- important variables
     SPLIT_FACTOR = 50;
     SIN_SCALE = 30;
