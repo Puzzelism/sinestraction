@@ -3,13 +3,14 @@
 
 **Sinestraction** is the latest craze melting brains throughout schools everywhere
 
-
 # Listen
 Math is a boring construct made by Big Education to turn you into an assembly line worker- *BUT* it's also really cool to look at...
 
 ## Enter Sinestraction
 
 For too long the beauty of mathematics has been gate kept by nobel laureates. Now for the first time ever, thanks to **Sinestraction** you can enjoy the miracle of numbers for yourself.
+
+![Demo!](https://media.giphy.com/media/MDDlbpnA3mSVbRhybS/giphy.gif)
 
 Watch the waves *dance* as you gleam on in envy with a boatload of features, including but not limited to
 
