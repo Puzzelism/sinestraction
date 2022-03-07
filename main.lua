@@ -72,7 +72,7 @@ function love.keypressed(key)
         MENU = not MENU
     elseif(key == "w")then
         SPLIT_FACTOR = SPLIT_FACTOR + 10;
-    elseif(KEY == "S")then
+    elseif(key == "s")then
         SPLIT_FACTOR = SPLIT_FACTOR - 10;
     end
 end
