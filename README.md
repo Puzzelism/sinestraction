@@ -1,5 +1,5 @@
 # Sinestraction
-![Version - 0.0.2](https://img.shields.io/badge/Version-0.0.1-9F2B68?style=for-the-badge)
+![Version - 0.1.0](https://img.shields.io/badge/Version-0.1.0-9F2B68?style=for-the-badge)
 
 **Sinestraction** is the latest craze melting brains throughout schools everywhere
 

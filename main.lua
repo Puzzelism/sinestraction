@@ -9,13 +9,7 @@ lk = love.keyboard;
 lm = love.math;
 
 -- version
-VERSION = '0.0.2';
-
--- base config
-SHADOW = true;
-WIREFRAME = false;
-COSINE = false;
-MENU = true;
+VERSION = "0.1.0";
 
 --colors
 function resetColors() -- ID
@@ -32,7 +26,9 @@ function randomizeColors(colorID)
     random = {lm.random(), lm.random(), lm.random()}
     if(colorID)then
         if(colorID == 1)then bgColor=random
-        elseif(colorID == 2)then sinColor=random
+        elseif(colorID == 2)then 
+            sinColor=random
+            shadowColor={sinColor[1]-0.3,sinColor[2]-0.3,sinColor[3]-0.3}
         elseif(colorID == 3)then shadowColor=random
         elseif(colorID == 4)then fontColor=random
         elseif(colorID == 5)then versionColor=random
@@ -45,6 +41,10 @@ end
 function reload()
     resetColors()
     -- important variables
+    SHADOW = true;
+    WIREFRAME = false;
+    COSINE = false;
+    MENU = true;
     SPLIT_FACTOR = 50;
     SIN_SCALE = 30;
     MOVE_FACTOR = 1;
@@ -117,6 +117,7 @@ end
 
 function love.draw()
     -- graphcis step
+    lg.setColor(fontColor)
     lg.scale(2, 2);
     lg.setBackgroundColor(bgColor);
 
@@ -139,7 +140,7 @@ function love.draw()
         lg.setColor(fontColor)
         lg.printf({shadowColor, "y = SIN(x * ", highlightColor, FREQ, shadowColor, " + ", highlightColor, MOVE_FACTOR, shadowColor, ") * ", highlightColor, SIN_SCALE}, w/4-80, h/2-32, w, center)
 
-        lg.setColor(shadowColor);
+        lg.setColor(0.5,0.5,0.5);
         lg.print("made by puzzel 2022", w/4-64, h/2-16)
     end
     lg.setColor(MENU and fontColor or shadowColor)
