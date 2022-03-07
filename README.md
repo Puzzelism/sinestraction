@@ -1,5 +1,5 @@
 # Sinestraction
-![Version - 0.0.1](https://img.shields.io/badge/Version-0.0.1-9F2B68?style=for-the-badge)
+![Version - 0.0.2](https://img.shields.io/badge/Version-0.0.1-9F2B68?style=for-the-badge)
 
 **Sinestraction** is the latest craze melting brains throughout schools everywhere
 
@@ -23,6 +23,20 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
  - See the latest in graphics technology with our wave **shadows**
 
  Not to mention so much more to come!
+
+## Controls
+|Command|Function|
+|--|--|
+|+/-| Increases and decreases **movement** of wave|
+| up/down | Increases and decreases **magnitude** of wave|
+|left/right| Changes the waves **frequency**|
+|A/D| Modifies the **height** of the function|
+|L-SHIFT| Change the waves fill mode to **wireframe**|
+|TAB| Enable the rendering of a complementary **cosine** wave|
+|SPACE| Enable or disable **drop shadows** on wave|
+|ENTER| Toggles **fullscreen** (dynamic resolution)|
+|ALT| Toggles the visibility of **menus**|
+|ESCAPE| **Closes** the program|
 
 ## What are you waiting for?
 

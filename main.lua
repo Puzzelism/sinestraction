@@ -8,7 +8,7 @@ lg = love.graphics;
 lk = love.keyboard;
 
 -- version
-VERSION = '0.0.1';
+VERSION = '0.0.2';
 
 -- base config
 SHADOW = true;
@@ -23,6 +23,7 @@ cosColor = {1, 0.5, 0.5}
 shadowColor = {0.5, 0.5, 0.5}
 fontColor = {1, 1, 1}
 versionColor = {1, 1, 0}
+highlightColor = {0.5, 0.5, 1}
 
 function love.load()
     love.window.setMode(800, 640, {resizable = true, minwidth=600, minheight=600});
@@ -49,9 +50,9 @@ function love.update(dt)
     end
     -- frequency
     if(lk.isDown("right"))then
-        FREQ = FREQ +(0.05 * dt);
+        FREQ = FREQ +(0.005);
     elseif(lk.isDown("left"))then
-        FREQ = FREQ - (0.05 * dt);
+        FREQ = FREQ - (0.005);
     end
 
     -- get env variables
@@ -116,7 +117,11 @@ function love.draw()
         lg.print((SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-138, 32)
         
         lg.setColor(versionColor);
-        lg.print("v"..VERSION, w/4-20, h/2-40)
+        lg.print("v"..VERSION, w/4-20, h/2-50)
+
+        lg.setColor(fontColor)
+        lg.printf({shadowColor, "y = SIN(x * ", highlightColor, FREQ, shadowColor, " + ", highlightColor, MOVE_FACTOR, shadowColor, ") * ", highlightColor, SIN_SCALE}, w/4-80, h/2-32, w, center)
+
         lg.setColor(shadowColor);
         lg.print("made by puzzel 2022", w/4-64, h/2-16)
         
@@ -133,7 +138,7 @@ function love.draw()
         end
         if(SHADOW)then
             lg.setColor(shadowColor);
-            lg.rectangle("fill", i*sliceW+4, points[i]+4, sliceW, HEIGHT);
+            lg.rectangle("fill", i*sliceW+6, points[i]+2, sliceW, HEIGHT);
         end
         lg.setColor(sinColor);
         lg.rectangle((WIREFRAME and 'line' or 'fill'), i*sliceW, points[i], sliceW, HEIGHT);
