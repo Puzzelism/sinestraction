@@ -6,6 +6,7 @@
 -- shortcut ops
 lg = love.graphics;
 lk = love.keyboard;
+lm = love.math;
 
 -- version
 VERSION = '0.0.2';
@@ -16,18 +17,19 @@ WIREFRAME = false;
 COSINE = false;
 MENU = true;
 
--- colors
-bgColor = {0.05, 0.05, 0.05}
-sinColor = {1, 1, 1}
-cosColor = {1, 0.5, 0.5}
-shadowColor = {0.5, 0.5, 0.5}
-fontColor = {1, 1, 1}
-versionColor = {1, 1, 0}
-highlightColor = {0.5, 0.5, 1}
+--colors
+function resetColors()
+    bgColor = {0.05, 0.05, 0.05} -- 1
+    sinColor = {1, 1, 1} -- 2
+    shadowColor = {0.5, 0.5, 0.5} -- 3
+    fontColor = {1, 1, 1} -- 4
+    versionColor = {1, 1, 0} -- 5
+    highlightColor = {0.5, 0.5, 1} -- 6
+    cosColor = {1, 0.5, 0.5} -- 7
+end
 
-function love.load()
-    love.window.setMode(800, 640, {resizable = true, minwidth=600, minheight=600});
-
+function reload()
+    resetColors()
     -- important variables
     SPLIT_FACTOR = 50;
     SIN_SCALE = 30;
@@ -35,10 +37,29 @@ function love.load()
     FREQ = 0.25;
     HEIGHT = 40;
     move = MOVE_FACTOR;
-    
+        
     -- init arrays
     points = {};
     points2 = {};
+end
+
+function randomizeColors(colorID)
+    random = {lm.random(), lm.random(), lm.random()}
+    if(colorID)then
+        if(colorID == 1)then bgColor=random
+        elseif(colorID == 2)then sinColor=random
+        elseif(colorID == 3)then shadowColor=random
+        elseif(colorID == 4)then fontColor=random
+        elseif(colorID == 5)then versionColor=random
+        elseif(colorID == 6)then highlightColor=random
+        elseif(colorID == 7)then cosColor=random
+        end
+    end
+end
+
+function love.load()
+    reload();
+    love.window.setMode(800, 640, {resizable = true, minwidth=600, minheight=600});
 end
 
 function love.update(dt)
@@ -71,31 +92,26 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-    if(key == "escape")then
-        love.event.quit()
-    elseif(key == "space")then
-        SHADOW = not SHADOW
-    elseif(key == "=")then 
-        MOVE_FACTOR = MOVE_FACTOR + 1;
-    elseif(key == "-")then
-        MOVE_FACTOR = MOVE_FACTOR - 1;
-    elseif(key == "lshift")then
-        WIREFRAME = not WIREFRAME
-    elseif(key == "tab")then
-        COSINE = not COSINE
-    elseif(key == "lalt")then
-        MENU = not MENU
-    elseif(key == "w")then
-        SPLIT_FACTOR = SPLIT_FACTOR + 10;
-    elseif(key == "s")then
-        SPLIT_FACTOR = SPLIT_FACTOR - 10;
-    elseif(key == "return")then
-	    fullscreen = not fullscreen
-	    love.window.setFullscreen(fullscreen, fstype)
-	elseif(key == "d")then
-        HEIGHT = HEIGHT + 10;
-    elseif(key == "a")then
-        HEIGHT = HEIGHT - 10;
+    if(key == "escape")then love.event.quit()
+    elseif(key == "space")then SHADOW = not SHADOW
+    elseif(key == "=")then  MOVE_FACTOR = MOVE_FACTOR + 1;
+    elseif(key == "-")then MOVE_FACTOR = MOVE_FACTOR - 1;
+    elseif(key == "lshift")then WIREFRAME = not WIREFRAME
+    elseif(key == "tab")then COSINE = not COSINE
+    elseif(key == "lalt")then MENU = not MENU
+    elseif(key == "w")then SPLIT_FACTOR = SPLIT_FACTOR + 10;
+    elseif(key == "s")then SPLIT_FACTOR = SPLIT_FACTOR - 10;
+    elseif(key == "return")then fullscreen = not fullscreen love.window.setFullscreen(fullscreen, fstype)
+	elseif(key == "d")then HEIGHT = HEIGHT + 10;
+    elseif(key == "a")then HEIGHT = HEIGHT - 10;
+    elseif(key == "1")then randomizeColors(1);
+    elseif(key == "2")then randomizeColors(2);
+    elseif(key == "3")then randomizeColors(3);
+    elseif(key == "4")then randomizeColors(4);
+    elseif(key == "5")then randomizeColors(5);
+    elseif(key == "6")then randomizeColors(6);
+    elseif(key == "7")then randomizeColors(7);
+    elseif(key == "r")then reload();
     end
 end
 
@@ -115,6 +131,7 @@ function love.draw()
         lg.print("[TAB] VIEW_COS: "..(COSINE and 'HI' or 'LO'), 0, 80)
         lg.print("FULLSCRN [ENTER]", w/2-120, 16)
         lg.print((SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-138, 32)
+        lg.print("COLORIZE [1-7][R RESET]", w/2-158, 48)
         
         lg.setColor(versionColor);
         lg.print("v"..VERSION, w/4-20, h/2-50)
@@ -124,11 +141,10 @@ function love.draw()
 
         lg.setColor(shadowColor);
         lg.print("made by puzzel 2022", w/4-64, h/2-16)
-        
     end
     lg.setColor(MENU and fontColor or shadowColor)
     lg.print("MENU [ALT]", w/2-74, 0)
-    lg.print(love.timer.getFPS().."fps", w/2-40, (MENU and 48 or 16))
+    lg.print(love.timer.getFPS().."fps", w/2-40, (MENU and 64 or 16))
     
     -- wave render
     for i = 0,SPLIT_FACTOR do
