@@ -106,11 +106,10 @@ function love.keypressed(key)
     elseif(key == "a")then HEIGHT = HEIGHT - 10;
     elseif(key == "1")then randomizeColors(1);
     elseif(key == "2")then randomizeColors(2);
-    elseif(key == "3")then randomizeColors(3);
-    elseif(key == "4")then randomizeColors(4);
+    elseif(key == "3")then randomizeColors(7);
+    elseif(key == "4")then randomizeColors(3);
     elseif(key == "5")then randomizeColors(5);
     elseif(key == "6")then randomizeColors(6);
-    elseif(key == "7")then randomizeColors(7);
     elseif(key == "r")then reload();
     end
 end
@@ -132,12 +131,12 @@ function love.draw()
         lg.print("[TAB] VIEW_COS: "..(COSINE and 'HI' or 'LO'), 0, 80)
         lg.print("FULLSCRN [ENTER]", w/2-120, 16)
         lg.print((SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-138, 32)
-        lg.print("COLORIZE [1-7][R RESET]", w/2-158, 48)
+        lg.print("COLORIZE [1-6][R RESET]", w/2-158, 48)
         
         lg.setColor(versionColor);
         lg.print("v"..VERSION, w/4-20, h/2-50)
 
-        lg.setColor(fontColor)
+        lg.setColor(1,1,1,1)
         lg.printf({shadowColor, "y = SIN(x * ", highlightColor, FREQ, shadowColor, " + ", highlightColor, MOVE_FACTOR, shadowColor, ") * ", highlightColor, SIN_SCALE}, w/4-80, h/2-32, w, center)
 
         lg.setColor(0.5,0.5,0.5);
