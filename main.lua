@@ -18,7 +18,7 @@ COSINE = false;
 MENU = true;
 
 --colors
-function resetColors()
+function resetColors() -- ID
     bgColor = {0.05, 0.05, 0.05} -- 1
     sinColor = {1, 1, 1} -- 2
     shadowColor = {0.5, 0.5, 0.5} -- 3
@@ -26,6 +26,20 @@ function resetColors()
     versionColor = {1, 1, 0} -- 5
     highlightColor = {0.5, 0.5, 1} -- 6
     cosColor = {1, 0.5, 0.5} -- 7
+end
+
+function randomizeColors(colorID)
+    random = {lm.random(), lm.random(), lm.random()}
+    if(colorID)then
+        if(colorID == 1)then bgColor=random
+        elseif(colorID == 2)then sinColor=random
+        elseif(colorID == 3)then shadowColor=random
+        elseif(colorID == 4)then fontColor=random
+        elseif(colorID == 5)then versionColor=random
+        elseif(colorID == 6)then highlightColor=random
+        elseif(colorID == 7)then cosColor=random
+        end
+    end
 end
 
 function reload()
@@ -43,23 +57,9 @@ function reload()
     points2 = {};
 end
 
-function randomizeColors(colorID)
-    random = {lm.random(), lm.random(), lm.random()}
-    if(colorID)then
-        if(colorID == 1)then bgColor=random
-        elseif(colorID == 2)then sinColor=random
-        elseif(colorID == 3)then shadowColor=random
-        elseif(colorID == 4)then fontColor=random
-        elseif(colorID == 5)then versionColor=random
-        elseif(colorID == 6)then highlightColor=random
-        elseif(colorID == 7)then cosColor=random
-        end
-    end
-end
-
 function love.load()
-    reload();
     love.window.setMode(800, 640, {resizable = true, minwidth=600, minheight=600});
+    reload();
 end
 
 function love.update(dt)
