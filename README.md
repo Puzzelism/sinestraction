@@ -31,6 +31,7 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
 | up/down | Increases and decreases **magnitude** of wave|
 |left/right| Changes the waves **frequency**|
 |A/D| Modifies the **height** of the function|
+|MOUSEWHEEL| Changes the **offset** of the wave |
 |L-SHIFT| Change the waves fill mode to **wireframe**|
 |TAB| Enable the rendering of a complementary **cosine** wave|
 |SPACE| Enable or disable **drop shadows** on wave|

@@ -53,6 +53,7 @@ function reload()
     FREQ = 0.25;
     HEIGHT = 40;
     AUDIO_TIMER_MAX = 20;
+    OFFSET = 20;
     AUDIO_TIMER = AUDIO_TIMER_MAX;
     move = MOVE_FACTOR;
 
@@ -125,8 +126,8 @@ function love.update(dt)
 
     -- update waves
     for x = 0,SPLIT_FACTOR do
-        sined = 20+(math.sin(x*FREQ+move)*SIN_SCALE)
-        cosined = 20+(math.cos(x*FREQ-move)*SIN_SCALE)
+        sined = OFFSET+(math.sin(x*FREQ+move)*SIN_SCALE)
+        cosined = (OFFSET-5)+(math.cos(x*FREQ-move)*SIN_SCALE)
         points[x] = (lg.getHeight()/4)-20 + sined;
         points2[x] = (lg.getHeight()/4)-20 + cosined;
     end
@@ -156,6 +157,12 @@ function love.keypressed(key)
     end
 end
 
+function love.wheelmoved(x, y)
+    if(y > 0)then OFFSET = OFFSET - 5
+    elseif(y < 0) then OFFSET = OFFSET + 5
+    end
+end
+
 function love.draw()
     -- graphcis step
     lg.setColor(fontColor)
@@ -179,7 +186,7 @@ function love.draw()
         lg.print("v"..VERSION, w/4-20, h/2-50)
 
         lg.setColor(1,1,1,1)
-        lg.printf({shadowColor, "y = SIN(x * ", highlightColor, FREQ, shadowColor, " + ", highlightColor, MOVE_FACTOR, shadowColor, ") * ", highlightColor, SIN_SCALE}, w/4-80, h/2-32, w, center)
+        lg.printf({shadowColor, "y = ", highlightColor, OFFSET-20, shadowColor, " + SIN(x * ", highlightColor, FREQ, shadowColor, " + ", highlightColor, MOVE_FACTOR, shadowColor, ") * ", highlightColor, SIN_SCALE}, w/4-95, h/2-32, w, center)
 
         lg.setColor(0.5,0.5,0.5);
         lg.print("made by puzzel 2022", w/4-64, h/2-16)
@@ -188,6 +195,9 @@ function love.draw()
     lg.print("MENU [ALT]", w/2-74, 0)
     lg.print(love.timer.getFPS().."fps", w/2-40, (MENU and 64 or 16))
     
+    local centerX = w/4
+	local centerY = h/4
+
     -- wave render
     for i = 0,SPLIT_FACTOR do
         if(COSINE)then
@@ -198,7 +208,7 @@ function love.draw()
             lg.setColor(shadowColor);
             lg.rectangle("fill", i*sliceW+6, points[i]+2, sliceW, HEIGHT);
         end
-        lg.setColor(sinColor);
+        lg.setColor(sinColor); 
         lg.rectangle((WIREFRAME and 'line' or 'fill'), i*sliceW, points[i], sliceW, HEIGHT);
     end
 end
