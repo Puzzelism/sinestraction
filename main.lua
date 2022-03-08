@@ -49,17 +49,18 @@ function reload()
     MENU = true;
     SPLIT_FACTOR = 50;
     SIN_SCALE = 30;
-    MOVE_FACTOR = 1;
+    MOVE_FACTOR = 2;
     FREQ = 0.25;
     HEIGHT = 40;
     AUDIO_TIMER_MAX = 25;
     OFFSET = 20;
     TITLE = true;
     AUDIO_TIMER = AUDIO_TIMER_MAX;
+    VOL = 0.05;
     move = MOVE_FACTOR;
 
     --audio
-    la.setVolume(0.25);
+    la.setVolume(VOL);
     select1 = ls.newSoundData("res/select1.wav")
     select2 = ls.newSoundData("res/select2.wav")
     select3 = ls.newSoundData("res/select3.wav")
@@ -80,6 +81,7 @@ function reload()
 
     -- graphics
     titleScreen = lg.newImage("res/title.png")
+    titleSplash = lg.newImage("res/splash.png")
 
     -- init arrays
     points = {};
@@ -145,14 +147,9 @@ function love.draw()
 
     drawWaves()
     
-    if(not TITLE)then
-        -- menu render
-        if(MENU)then
-            drawMenu()
-        end
-    else
-        drawTitle()
-    end
+    if(not TITLE)then  
+        if(MENU)then drawMenu() end
+    else drawTitle() end
 end
 
 function love.keypressed(key)
@@ -164,7 +161,7 @@ function love.keypressed(key)
         playSelect(selectSnd)
         if(key == "escape")then TITLE = not TITLE
         elseif(key == "space")then SHADOW = not SHADOW
-        elseif(key == "=")then  MOVE_FACTOR = MOVE_FACTOR + 1;
+        elseif(key == "=")then MOVE_FACTOR = MOVE_FACTOR + 1;
         elseif(key == "-")then MOVE_FACTOR = MOVE_FACTOR - 1;
         elseif(key == "lshift")then WIREFRAME = not WIREFRAME
         elseif(key == "tab")then COSINE = not COSINE
@@ -173,6 +170,7 @@ function love.keypressed(key)
         elseif(key == "s")then SPLIT_FACTOR = SPLIT_FACTOR - 10;
 	    elseif(key == "d")then HEIGHT = HEIGHT + 10;
         elseif(key == "a")then HEIGHT = HEIGHT - 10;
+        -- COLORS
         elseif(key == "1")then randomizeColors(1);
         elseif(key == "2")then randomizeColors(2);
         elseif(key == "3")then randomizeColors(7);
@@ -182,7 +180,8 @@ function love.keypressed(key)
         elseif(key == "r")then reload();
         end
     end
-
+    
+    -- fullscreen
     if(key == "return")then fullscreen = not fullscreen love.window.setFullscreen(fullscreen, fstype) end
 end
 
@@ -220,8 +219,9 @@ end
 
 function drawTitle()
     lg.setBackgroundColor(bgColor);
-    titleScreen:setFilter("linear", "nearest");
-    lg.draw(titleScreen, (w/2-titleScreen:getPixelWidth())/2, (h/2-titleScreen:getPixelHeight())/2);
+    titleSplash:setFilter("linear", "nearest");
+    lg.setColor(sinColor);
+    lg.draw(titleSplash, (w/2-titleSplash:getPixelWidth())/2-40, h/15, 0, 1.5, 1.5) --1.5
 end
 
 function drawWaves()
