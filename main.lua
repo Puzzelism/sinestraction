@@ -11,7 +11,7 @@ ls = love.sound;
 la = love.audio;
 
 -- version
-VERSION = "0.1.1";
+VERSION = "0.1.2";
 
 --colors
 function resetColors() -- ID
@@ -80,7 +80,6 @@ function reload()
     }
 
     -- graphics
-    titleScreen = lg.newImage("res/title.png")
     titleSplash = lg.newImage("res/splash.png")
 
     -- init arrays
