@@ -187,7 +187,7 @@ function love.keypressed(key)
     end
     
     -- fullscreen
-    if(key == "return" or "f11")then fullscreen = not fullscreen love.window.setFullscreen(fullscreen, fstype) end
+    if(key == "return" or key == "f11")then fullscreen = not fullscreen love.window.setFullscreen(fullscreen, fstype) end
 end
 
 function love.wheelmoved(x, y)
