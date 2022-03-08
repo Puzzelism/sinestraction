@@ -11,7 +11,7 @@ ls = love.sound;
 la = love.audio;
 
 -- version
-VERSION = "0.1.2";
+VERSION = "0.1.5";
 
 --colors
 function resetColors() -- ID
@@ -51,7 +51,7 @@ function reload()
     SIN_SCALE = 30;
     MOVE_FACTOR = 2;
     FREQ = 0.25;
-    HEIGHT = 40;
+    HEIGHT = 20;
     AUDIO_TIMER_MAX = 25;
     OFFSET = 20;
     TITLE = true;
@@ -81,6 +81,8 @@ function reload()
 
     -- graphics
     titleSplash = lg.newImage("res/splash.png")
+    font = lg.setNewFont("res/Pixellari.ttf", 16)
+    font:setFilter("linear", "nearest")
 
     -- init arrays
     points = {};
@@ -99,7 +101,7 @@ function playSelect(sound)
 end
 
 function love.load()
-    love.window.setMode(800, 640, {resizable = true, minwidth=600, minheight=600});
+    love.window.setMode(600, 600, {resizable = true, minwidth=600, minheight=600});
     reload();
 end
 
@@ -148,6 +150,10 @@ function love.draw()
     
     if(not TITLE)then  
         if(MENU)then drawMenu() end
+        lg.setColor(MENU and fontColor or shadowColor)
+        lg.print("MENU [ALT]", w/2-90, 0)
+        lg.setColor(fontColor);
+        lg.printf({versionColor, (love.timer.getFPS().."fps")}, w/2-42, (MENU and h/2-16 or 16), 200)
     else drawTitle() end
 end
 
@@ -162,7 +168,7 @@ function love.keypressed(key)
         elseif(key == "space")then SHADOW = not SHADOW
         elseif(key == "=")then MOVE_FACTOR = MOVE_FACTOR + 1;
         elseif(key == "-")then MOVE_FACTOR = MOVE_FACTOR - 1;
-        elseif(key == "lshift")then WIREFRAME = not WIREFRAME
+        elseif(key == "lctrl")then WIREFRAME = not WIREFRAME
         elseif(key == "tab")then COSINE = not COSINE
         elseif(key == "lalt")then MENU = not MENU
         elseif(key == "w")then SPLIT_FACTOR = SPLIT_FACTOR + 10;
@@ -192,28 +198,22 @@ end
 
 function drawMenu()
     lg.setColor(fontColor);
-    lg.print("[UP/DOWN] SCALE: "..SIN_SCALE,0,0)
-    lg.print("[+/-] MOVE: "..MOVE_FACTOR,0,16)
-    lg.print("[<-/->] FREQ: "..FREQ,0,32)
-    lg.print("[A/D] HEIGHT: "..HEIGHT,0,48)
-    lg.print("[LSHIFT] WIRE: "..(WIREFRAME and ('['..(COSINE and SPLIT_FACTOR*2 or SPLIT_FACTOR)..' NODES, W/S to mod]') or 'LO'), 0, 64)
-    lg.print("[TAB] VIEW_COS: "..(COSINE and 'HI' or 'LO'), 0, 80)
-    lg.print("FULLSCRN [ENTER]", w/2-120, 16)
-    lg.print((SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-138, 32)
-    lg.print("COLORIZE [1-6][R RESET]", w/2-158, 48)
-    
-    lg.setColor(versionColor);
-    lg.print("v"..VERSION, w/4-20, h/2-50)
+    lg.print("[UP/DOWN] SCALE: "..SIN_SCALE,1,0)
+    lg.print("[+/-] MOVE: "..MOVE_FACTOR,1,16)
+    lg.print("[</>] FREQ: "..FREQ,1,32)
+    lg.print("[A/D] HEIGHT: "..HEIGHT,1,48)
+    lg.print("[LCTRL] WIRE: "..(WIREFRAME and ('['..(COSINE and SPLIT_FACTOR*2 or SPLIT_FACTOR)..' NODES, W/S to mod]') or 'LO'), 1, 64)
+    lg.print("[TAB] VIEW_COS: "..(COSINE and 'HI' or 'LO'), 1, 80)
+    lg.print("FULLSCRN [ENTER]", w/2, 16)
+    lg.print((SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-162, 16)
+    lg.print("_____COLORS_", w/2-116, 32)
+    lg.printf({{bgColor[1]+0.2, bgColor[2]+0.2, bgColor[3]+0.2}, "[1]", sinColor, "[2]", cosColor, "[3]", shadowColor, "[4]", versionColor, "[5]", highlightColor, "[6]"}, w/2-118, 48, 200)
 
     lg.setColor(1,1,1,1)
     lg.printf({shadowColor, "y = ", highlightColor, OFFSET-20, shadowColor, " + SIN(x * ", highlightColor, FREQ, shadowColor, " + ", highlightColor, MOVE_FACTOR, shadowColor, ") * ", highlightColor, SIN_SCALE}, w/4-95, h/2-32, w, center)
 
     lg.setColor(0.5,0.5,0.5);
     lg.print("made by puzzel 2022", w/4-64, h/2-16)
-
-    lg.setColor(MENU and fontColor or shadowColor)
-    lg.print("MENU [ALT]", w/2-74, 0)
-    lg.print(love.timer.getFPS().."fps", w/2-40, (MENU and 64 or 16))
 end
 
 function drawTitle()
@@ -221,6 +221,10 @@ function drawTitle()
     titleSplash:setFilter("linear", "nearest");
     lg.setColor(sinColor);
     lg.draw(titleSplash, (w/2-titleSplash:getPixelWidth())/2-40, h/15, 0, 1.5, 1.5) --1.5
+    lg.print("[SPACE]", w/4-28, h/2-50)
+    
+    lg.setColor(versionColor);
+    lg.print("v"..VERSION, w/4, h/15+30);
 end
 
 function drawWaves()

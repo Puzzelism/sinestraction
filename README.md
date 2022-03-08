@@ -1,5 +1,5 @@
 # Sinestraction
-![Version - 0.1.1](https://img.shields.io/badge/Version-0.1.1-9F2B68?style=for-the-badge)
+![Version - 0.1.5](https://img.shields.io/badge/Version-0.1.5-9F2B68?style=for-the-badge)
 
 **Sinestraction** is the latest craze melting brains throughout schools everywhere
 
@@ -14,19 +14,21 @@ For too long the beauty of mathematics has been gate kept by nobel laureates. No
 
 Watch the waves *dance* as you gleam on in envy with a boatload of features, including but not limited to
 
- - Adjustable **scale**, and **frequency**
- - Dynamic **scalability** to be as big as your heart (or your monitor) can take
- - Play with the smoothing of the graph by adjusting the **split factor**
- - **Stop, start and speed up** time as you see fit
- - Add **additional waves** so the party never ends
- - See the action up close and personal with **wireframes**
- - See the latest in graphics technology with our wave **shadows**
+ - Adjustable **scale**, and **frequency!**
+ - Dynamic **resolution** to be as big as your heart (or your monitor) can take!
+ - Play with the smoothing of the graph by adjusting the **split factor!**
+ - **Stop, start and speed up** time as you see fit!
+ - Add **additional waves** so the party never ends!
+ - See the action up close and personal with **wireframes!**
+ - See the latest in graphics technology with our wave **shadows!**
+ - Observe the numbers doing their thing with the **function visualizer!**
 
  Not to mention so much more to come!
 
 ## Controls
 |Command|Function|
 |--|--|
+|W/S| Changes the amount of **slices** used to draw the waves
 |+/-| Increases and decreases **movement** of wave|
 | up/down | Increases and decreases **magnitude** of wave|
 |left/right| Changes the waves **frequency**|
@@ -37,13 +39,18 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
 |SPACE| Enable or disable **drop shadows** on wave|
 |ENTER| Toggles **fullscreen** (dynamic resolution)|
 |ALT| Toggles the visibility of **menus**|
-|ESCAPE| **Closes** the program|
+|ESCAPE| returns to **title screen** or **Closes** the program|
+
+### Color Controls
+|KEY|Linked Color|
+|--|--|
+|1| The background |
+|2| The sine wave (also changes shadow)|
+|3| The cos wave |
+|4| The shadow color |
+|5| FPS count color |
+|6| Highlights on the functional view |
 
 ## What are you waiting for?
 
-I know, it seems too good to believe, but believe me, it's all ***!false***
-
-Download instructions to come, whole project is made with **LÖVE 11.4** and if that means anything to you you can probably build and run this just fine as it is.
-
-:)
-
+You can find the latest distributed version at the [releases page](https://github.com/Puzzelism/sinestraction/releases) here on github
