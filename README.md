@@ -37,7 +37,7 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
 |L-SHIFT| Change the waves fill mode to **wireframe**|
 |TAB| Enable the rendering of a complementary **cosine** wave|
 |SPACE| Enable or disable **drop shadows** on wave|
-|ENTER| Toggles **fullscreen** (dynamic resolution)|
+|ENTER/F11| Toggles **fullscreen** (dynamic resolution)|
 |ALT| Toggles the visibility of **menus**|
 |ESCAPE| returns to **title screen** or **Closes** the program|
 
