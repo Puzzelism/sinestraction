@@ -46,7 +46,7 @@ function reload()
     SHADOW = true;
     WIREFRAME = false;
     COSINE = false;
-    MENU = true;
+    MENU = false;
     SPLIT_FACTOR = 50;
     SIN_SCALE = 30;
     MOVE_FACTOR = 2;
@@ -161,6 +161,7 @@ function love.keypressed(key)
     if(TITLE)then
         if(key == "escape")then love.event.quit()
         elseif(key == "space")then TITLE = not TITLE
+            MENU = false;
         end
     elseif(not TITLE)then
         playSelect(selectSnd)
