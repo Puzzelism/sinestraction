@@ -10,8 +10,6 @@ Math is a boring construct made by Big Education to turn you into an assembly li
 
 For too long the beauty of mathematics has been gate kept by nobel laureates. Now for the first time ever, thanks to **Sinestraction** you can enjoy the miracle of numbers for yourself.
 
-![Demo!](https://media.giphy.com/media/THJzN5uQEIvSrdSjM3/giphy.gif)
-
 Watch the waves *dance* as you gleam on in envy with a boatload of features, including but not limited to
 
  - Adjustable **scale**, and **frequency!**
