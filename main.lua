@@ -9,6 +9,7 @@ lk = love.keyboard;
 lm = love.math;
 ls = love.sound;
 la = love.audio;
+lms = love.mouse;
 
 -- version
 VERSION = "0.1.5";
@@ -130,8 +131,8 @@ end
 
 function love.update(dt)
     -- mouse controls
-    mouseX = love.mouse.getX()/2;
-    mouseY = love.mouse.getY()/2;
+    mouseX = lms.getX()/2;
+    mouseY = lms.getY()/2;
 
     -- scaling
     if(not TITLE)then
@@ -178,7 +179,7 @@ function love.update(dt)
                 if(mouseY > WAVES[i].points[x] and mouseY < WAVES[i].points[x]+WAVES[i].HEIGHT)then
                     WAVES[i].HOVER = true;
                     locked = true;
-                    if(love.mouse.isDown(1))then SEL = i end
+                    if(lms.isDown(1))then SEL = i end
                 else
                     WAVES[i].HOVER = false;
                 end
@@ -255,7 +256,7 @@ function drawMenu()
     lg.print("[TAB] NEW WAVE: "..NUM_WAVES, 1, 80)
     lg.print("FULLSCRN [ENTER]", w/2, 16)
     lg.print((WAVES[SEL].SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-162, 16)
-    lg.print("____COLORS_", w/2-106, 32)
+    lg.print("__COLORS__", w/2-97, 32)
     lg.printf({{bgColor[1]+0.2, bgColor[2]+0.2, bgColor[3]+0.2}, "[1]", WAVES[SEL].color, "[2]", WAVES[SEL].shadowColor, "[3]", versionColor, "[4]", highlightColor, "[5]"}, w/2-98, 48, 200)
 
     lg.printf({WAVES[SEL].color, "y = ", highlightColor, WAVES[SEL].OFFSET-20, WAVES[SEL].color, " + SIN(x * ", highlightColor, WAVES[SEL].FREQ, WAVES[SEL].color, " + ", highlightColor, WAVES[SEL].MOVE_FACTOR, WAVES[SEL].color, ") * ", highlightColor, WAVES[SEL].SIN_SCALE}, w/4-94, h/2-32, w, center)
