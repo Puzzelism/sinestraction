@@ -12,15 +12,7 @@ la = love.audio;
 lms = love.mouse;
 
 -- version
-VERSION = "1.1.0";
-
---colors
-function resetColors()
-    bgColor = {0.05, 0.05, 0.05}
-    fontColor = {1, 1, 1}
-    versionColor = {1, 1, 0}
-    highlightColor = {0.5, 0.5, 1}
-end
+VERSION = "1.0.2";
 
 function randColor(offset)
     if(offset == nil) then
@@ -35,9 +27,10 @@ function getShadow(color)
     return {color[1]-0.3, color[2]-0.3, color[3]-0.3}
 end
 
-function addWave()
-    temp = randColor();
-    WAVES[NUM_WAVES+1] = {
+function addWave(color)
+    temp = randColor()
+    NUM_WAVES = NUM_WAVES + 1;
+    return {
         SHADOW = true,
         WIREFRAME = false,
         SPLIT_FACTOR = 50,
@@ -53,38 +46,19 @@ function addWave()
         shadowColor = getShadow(temp),
         points = {}
     }
-
-    NUM_WAVES = NUM_WAVES + 1;
-    SEL = NUM_WAVES
 end
 
 function reload()
-    -- important variables
-    NUM_WAVES = 1;
-    SEL = 0;
-    TITLE = true;
+    -- graphics
+    titleSplash = lg.newImage("res/splash.png")
+    font = lg.setNewFont("res/Pixellari.ttf", 16)
+    font:setFilter("linear", "nearest")
 
-    TICK = 25;
-    TICK_TIMER = TICK;
-    
-    WAVES = {
-        {
-            SHADOW = true,
-            WIREFRAME = false,
-            SPLIT_FACTOR = 50,
-            SIN_SCALE = 30,
-            MOVE_FACTOR = 2,
-            FREQ = 0.25,
-            HEIGHT = 20,
-            OFFSET = 20,
-            HOVER = false,
-            sliceW = 0,
-            move = 0,
-            color = {1,1,1},
-            shadowColor = {0.5,0.5,0.5},
-            points = {}
-        },
-    }
+    -- colors
+    bgColor = {0.05, 0.05, 0.05}
+    fontColor = {1, 1, 1}
+    versionColor = {1, 1, 0}
+    highlightColor = {0.5, 0.5, 1}
 
     --audio
     VOL = 0.05;
@@ -95,7 +69,7 @@ function reload()
     synth1 = ls.newSoundData("res/laser1.wav")
     synth2 = ls.newSoundData("res/laser2.wav")
     synth3 = ls.newSoundData("res/laser3.wav")
-
+    
     synthSnd = {
         la.newSource(synth1, stream), 
         la.newSource(synth2, stream),
@@ -107,11 +81,18 @@ function reload()
         la.newSource(select3, static),
     }
 
-    -- graphics
-    titleSplash = lg.newImage("res/splash.png")
-    font = lg.setNewFont("res/Pixellari.ttf", 16)
-    font:setFilter("linear", "nearest")
-    resetColors()
+    -- engine init
+    NUM_WAVES = 0;
+    SEL = 0;
+    TITLE = true;
+    TICK = 25;
+    TICK_TIMER = TICK;
+
+    -- reset state
+    WAVES={}
+    WAVES[1] = addWave(fontColor)
+    WAVES[1].color = fontColor
+    WAVES[1].shadowColor = getShadow(fontColor)
 end
 
 function playSound(sound)
@@ -135,12 +116,15 @@ function love.update(dt)
     mouseX = lms.getX()/2;
     mouseY = lms.getY()/2;
 
+    -- get env variables
+    w = lg.getWidth();
+    h = lg.getHeight();
+
     -- tick
     TICK_TIMER = TICK_TIMER-1
 
     if(SEL > 0)then
         if(not TITLE)then
-
             -- scaling
             if(lk.isDown("up"))then
                 WAVES[SEL].SIN_SCALE = WAVES[SEL].SIN_SCALE + 2;
@@ -161,10 +145,6 @@ function love.update(dt)
         end
     end
 
-    -- get env variables
-    w = lg.getWidth();
-    h = lg.getHeight();
-
     -- update waves
     for i = 1,NUM_WAVES do
         WAVES[i].sliceW = w / WAVES[i].SPLIT_FACTOR;
@@ -177,47 +157,46 @@ function love.update(dt)
     end
 
     -- collision detection for waves (seperate for layering)
-    -- there's a reason we track fps
-        locked = false;
-        if(TITLE == false)then
-            for i=NUM_WAVES,1,-1 do
-                for x=0,WAVES[i].SPLIT_FACTOR do
-                    if(locked == false)then
-                        if(mouseX > x*WAVES[i].sliceW and mouseX < x*WAVES[i].sliceW+WAVES[i].sliceW)then
-                            if(mouseY > WAVES[i].points[x] and mouseY < WAVES[i].points[x]+WAVES[i].HEIGHT)then
-                                WAVES[i].HOVER = true;
-                                locked = true;
-                                if(lms.isDown(1))then 
-                                    SEL = i
-                                    playSound(selectSnd);
-                                    MENU = true;
-                                elseif(lms.isDown(2))then
-                                    SEL = i-1
-                                    playSound(selectSnd);
-                                    table.remove(WAVES, i);
-                                    NUM_WAVES = NUM_WAVES - 1;
-                                end
-                            else
-                                WAVES[i].HOVER = false;
-                            end
-                        else
-                            if(lms.isDown(1))then
-                                SEL = 0
-                            end
+    -- there's a reason we track fps 
+    locked = false;
+    for i=NUM_WAVES,1,-1 do
+        for x=0,WAVES[i].SPLIT_FACTOR do
+            if(locked == false)then
+                if(mouseX > x*WAVES[i].sliceW and mouseX < x*WAVES[i].sliceW+WAVES[i].sliceW)then
+                    if(mouseY > WAVES[i].points[x] and mouseY < WAVES[i].points[x]+WAVES[i].HEIGHT)then
+                        WAVES[i].HOVER = true;
+                        locked = true;
+                        if(lms.isDown(1))then 
+                            SEL = i
+                        playSound(selectSnd);
+                            MENU = true;
+                        elseif(lms.isDown(2))then
+                            SEL = i-1
+                            playSound(selectSnd);
+                            table.remove(WAVES, i);
+                            NUM_WAVES = NUM_WAVES - 1;
                         end
+                    else
+                        WAVES[i].HOVER = false;
+                    end
+                else
+                    if(lms.isDown(1))then
+                        SEL = 0
                     end
                 end
             end
         end
+    end
 end
 
 function love.draw()
-    lg.setColor(fontColor)
     lg.scale(2, 2);
     lg.setBackgroundColor(bgColor);
 
+    -- wave render
     drawWaves()
     
+    -- menu render
     if(not TITLE)then  
         if(MENU)then drawMenu() end
         lg.setColor(MENU and fontColor or {0.5,0.5,0.5})
@@ -235,35 +214,29 @@ function love.keypressed(key)
             MENU = false;
         end
     else
-        --if(key == "escape")then TITLE = not TITLE
-        --elseif(key == "lalt")then MENU = not MENU
-        --elseif(key == "tab")then addWave();
-        --elseif(key == "2")then --
-        --   WAVES[SEL].color = randColor();
-        --    WAVES[SEL].shadowColor = {WAVES[SEL].color[1]-0.3,WAVES[SEL].color[2]-0.3,WAVES[SEL].color[2]-0.3}
         if(SEL > 0)then
-            if(key == "space")then WAVES[SEL].SHADOW = not WAVES[SEL].SHADOW --
-            elseif(key == "=")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR + 1; --
-            elseif(key == "-")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR - 1; --
-            elseif(key == "lctrl")then WAVES[SEL].WIREFRAME = not WAVES[SEL].WIREFRAME --
-            elseif(key == "w")then WAVES[SEL].SPLIT_FACTOR = WAVES[SEL].SPLIT_FACTOR + 10; --
-            elseif(key == "s")then WAVES[SEL].SPLIT_FACTOR = WAVES[SEL].SPLIT_FACTOR - 10; --
-	        elseif(key == "d")then WAVES[SEL].HEIGHT = WAVES[SEL].HEIGHT + 10; --
-            elseif(key == "a")then WAVES[SEL].HEIGHT = WAVES[SEL].HEIGHT - 10; --
-            elseif(key == "2")then --
+            if(key == "space")then WAVES[SEL].SHADOW = not WAVES[SEL].SHADOW;
+            elseif(key == "=")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR + 1;
+            elseif(key == "-")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR - 1;
+            elseif(key == "lctrl")then WAVES[SEL].WIREFRAME = not WAVES[SEL].WIREFRAME;
+            elseif(key == "w")then WAVES[SEL].SPLIT_FACTOR = WAVES[SEL].SPLIT_FACTOR + 10;
+            elseif(key == "s")then WAVES[SEL].SPLIT_FACTOR = WAVES[SEL].SPLIT_FACTOR - 10;
+	        elseif(key == "d")then WAVES[SEL].HEIGHT = WAVES[SEL].HEIGHT + 10;
+            elseif(key == "a")then WAVES[SEL].HEIGHT = WAVES[SEL].HEIGHT - 10;
+            elseif(key == "2")then
                 WAVES[SEL].color = randColor();
-                WAVES[SEL].shadowColor = {WAVES[SEL].color[1]-0.3,WAVES[SEL].color[2]-0.3,WAVES[SEL].color[2]-0.3}
+                WAVES[SEL].shadowColor = {WAVES[SEL].color[1]-0.3,WAVES[SEL].color[2]-0.3,WAVES[SEL].color[2]-0.3};
             end
         end
 
         if(key == "1")then bgColor=randColor();
-        elseif(key == "3")then WAVES[SEL].shadowColor=randColor(); --
+        elseif(key == "3")then WAVES[SEL].shadowColor=randColor();
         elseif(key == "4")then versionColor=randColor(0.2);
         elseif(key == "5")then highlightColor=randColor();
         elseif(key == "r")then reload();
-        elseif(key == "escape")then TITLE = not TITLE
-        elseif(key == "lalt")then MENU = not MENU
-        elseif(key == "tab")then addWave();
+        elseif(key == "escape")then TITLE = not TITLE;
+        elseif(key == "lalt")then MENU = not MENU;
+        elseif(key == "tab")then WAVES[NUM_WAVES+1] = addWave();
         end
     end
     
@@ -272,9 +245,9 @@ function love.keypressed(key)
 end
 
 function love.wheelmoved(x, y)
-    if(SEL>0)then
-        if(y > 0)then WAVES[SEL].OFFSET = WAVES[SEL].OFFSET - 5
-        elseif(y < 0) then WAVES[SEL].OFFSET = WAVES[SEL].OFFSET + 5
+    if(SEL>0 and TITLE == false)then
+        if(y > 0)then WAVES[SEL].OFFSET = WAVES[SEL].OFFSET - 5;
+        elseif(y < 0) then WAVES[SEL].OFFSET = WAVES[SEL].OFFSET + 5;
         end
     end
 end
@@ -325,7 +298,7 @@ function drawWaves()
                 lg.setColor(WAVES[i].shadowColor);
                 lg.rectangle("fill", x*WAVES[i].sliceW+6, WAVES[i].points[x]+2, WAVES[i].sliceW, WAVES[i].HEIGHT);
             end
-            lg.setColor(WAVES[i].HOVER and WAVES[i].shadowColor or WAVES[i].color); 
+            lg.setColor((WAVES[i].HOVER and not TITLE) and WAVES[i].shadowColor or WAVES[i].color); 
             lg.rectangle((WAVES[i].WIREFRAME and 'line' or 'fill'), x*WAVES[i].sliceW, WAVES[i].points[x], WAVES[i].sliceW, WAVES[i].HEIGHT);
         end
     end
