@@ -12,7 +12,7 @@ la = love.audio;
 lms = love.mouse;
 
 -- version
-VERSION = "1.0.0";
+VERSION = "1.1.0";
 
 --colors
 function resetColors()
@@ -59,10 +59,14 @@ function addWave()
 end
 
 function reload()
-    resetColors()
     -- important variables
     NUM_WAVES = 1;
-    SEL = 1;
+    SEL = 0;
+    TITLE = true;
+
+    TICK = 25;
+    TICK_TIMER = TICK;
+    
     WAVES = {
         {
             SHADOW = true,
@@ -82,12 +86,8 @@ function reload()
         },
     }
 
-    AUDIO_TIMER_MAX = 25;
-    TITLE = true;
-    AUDIO_TIMER = AUDIO_TIMER_MAX;
-    VOL = 0.05;
-
     --audio
+    VOL = 0.05;
     la.setVolume(VOL);
     select1 = ls.newSoundData("res/select1.wav")
     select2 = ls.newSoundData("res/select2.wav")
@@ -111,22 +111,23 @@ function reload()
     titleSplash = lg.newImage("res/splash.png")
     font = lg.setNewFont("res/Pixellari.ttf", 16)
     font:setFilter("linear", "nearest")
+    resetColors()
 end
 
 function playSound(sound)
     soundTick = lm.random()
-    if(AUDIO_TIMER < 0)then
+    if(TICK_TIMER < 0)then
         if(soundTick < 0.3) then sound[1]:play()
         elseif(soundTick > 0.3 and soundTick < 0.7)then sound[2]:play()
         elseif(soundTick > 0.7)then sound[3]:play()
         end
-        AUDIO_TIMER = AUDIO_TIMER_MAX
+        TICK_TIMER = TICK;
     end
 end
 
 function love.load()
     love.window.setMode(600, 600, {resizable = true, minwidth=600, minheight=600});
-    reload(); -- configure variables
+    reload(); -- RESET variables
 end
 
 function love.update(dt)
@@ -134,31 +135,35 @@ function love.update(dt)
     mouseX = lms.getX()/2;
     mouseY = lms.getY()/2;
 
-    -- scaling
-    if(not TITLE)then
-        if(lk.isDown("up"))then
-            WAVES[SEL].SIN_SCALE = WAVES[SEL].SIN_SCALE + 2;
-            playSound(synthSnd)
-        elseif(lk.isDown("down"))then
-            WAVES[SEL].SIN_SCALE = WAVES[SEL].SIN_SCALE - 2;
-            playSound(synthSnd)
-        end
-        -- frequency
-        if(lk.isDown("right"))then
-            WAVES[SEL].FREQ = WAVES[SEL].FREQ +(0.005);
-            playSound(synthSnd)
-        elseif(lk.isDown("left"))then
-            WAVES[SEL].FREQ = WAVES[SEL].FREQ - (0.005);
-            playSound(synthSnd)
+    -- tick
+    TICK_TIMER = TICK_TIMER-1
+
+    if(SEL > 0)then
+        if(not TITLE)then
+
+            -- scaling
+            if(lk.isDown("up"))then
+                WAVES[SEL].SIN_SCALE = WAVES[SEL].SIN_SCALE + 2;
+                playSound(synthSnd)
+            elseif(lk.isDown("down"))then
+                WAVES[SEL].SIN_SCALE = WAVES[SEL].SIN_SCALE - 2;
+                playSound(synthSnd)
+            end
+
+            -- frequency
+            if(lk.isDown("right"))then
+                WAVES[SEL].FREQ = WAVES[SEL].FREQ +(0.005);
+                playSound(synthSnd)
+            elseif(lk.isDown("left"))then
+                WAVES[SEL].FREQ = WAVES[SEL].FREQ - (0.005);
+                playSound(synthSnd)
+            end
         end
     end
 
     -- get env variables
     w = lg.getWidth();
     h = lg.getHeight();
-    
-
-    AUDIO_TIMER = AUDIO_TIMER-1
 
     -- update waves
     for i = 1,NUM_WAVES do
@@ -172,32 +177,38 @@ function love.update(dt)
     end
 
     -- collision detection for waves (seperate for layering)
-    locked = false;
-    if(TITLE == false)then
-        for i=NUM_WAVES,1,-1 do
-            for x=0,WAVES[i].SPLIT_FACTOR do
-                if(locked == false)then
-                    if(mouseX > x*WAVES[i].sliceW and mouseX < x*WAVES[i].sliceW+WAVES[i].sliceW)then
-                    if(mouseY > WAVES[i].points[x] and mouseY < WAVES[i].points[x]+WAVES[i].HEIGHT)then
-                        WAVES[i].HOVER = true;
-                        locked = true;
-                        if(lms.isDown(1))then 
-                            SEL = i
-                            playSound(selectSnd);
-                        elseif(lms.isDown(2))then
-                            SEL = i-1
-                            playSound(selectSnd);
-                            table.remove(WAVES, i);
-                            NUM_WAVES = NUM_WAVES - 1;
+    -- there's a reason we track fps
+        locked = false;
+        if(TITLE == false)then
+            for i=NUM_WAVES,1,-1 do
+                for x=0,WAVES[i].SPLIT_FACTOR do
+                    if(locked == false)then
+                        if(mouseX > x*WAVES[i].sliceW and mouseX < x*WAVES[i].sliceW+WAVES[i].sliceW)then
+                            if(mouseY > WAVES[i].points[x] and mouseY < WAVES[i].points[x]+WAVES[i].HEIGHT)then
+                                WAVES[i].HOVER = true;
+                                locked = true;
+                                if(lms.isDown(1))then 
+                                    SEL = i
+                                    playSound(selectSnd);
+                                    MENU = true;
+                                elseif(lms.isDown(2))then
+                                    SEL = i-1
+                                    playSound(selectSnd);
+                                    table.remove(WAVES, i);
+                                    NUM_WAVES = NUM_WAVES - 1;
+                                end
+                            else
+                                WAVES[i].HOVER = false;
+                            end
+                        else
+                            if(lms.isDown(1))then
+                                SEL = 0
+                            end
                         end
-                    else
-                        WAVES[i].HOVER = false;
                     end
                 end
             end
         end
-    end
-    end
 end
 
 function love.draw()
@@ -217,33 +228,42 @@ function love.draw()
 end
 
 function love.keypressed(key)
+    playSound(selectSnd)
     if(TITLE)then
         if(key == "escape")then love.event.quit()
         elseif(key == "space")then TITLE = not TITLE
             MENU = false;
         end
-    elseif(not TITLE)then
-        playSound(selectSnd)
-        if(key == "escape")then TITLE = not TITLE
-        elseif(key == "space")then WAVES[SEL].SHADOW = not WAVES[SEL].SHADOW
-        elseif(key == "=")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR + 1;
-        elseif(key == "-")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR - 1;
-        elseif(key == "lctrl")then WAVES[SEL].WIREFRAME = not WAVES[SEL].WIREFRAME
-        elseif(key == "lalt")then MENU = not MENU
-        elseif(key == "w")then WAVES[SEL].SPLIT_FACTOR = WAVES[SEL].SPLIT_FACTOR + 10;
-        elseif(key == "s")then WAVES[SEL].SPLIT_FACTOR = WAVES[SEL].SPLIT_FACTOR - 10;
-	    elseif(key == "d")then WAVES[SEL].HEIGHT = WAVES[SEL].HEIGHT + 10;
-        elseif(key == "a")then WAVES[SEL].HEIGHT = WAVES[SEL].HEIGHT - 10;
-        elseif(key == "tab")then addWave();
-        -- COLORS
-        elseif(key == "1")then bgColor=randColor();
-        elseif(key == "2")then 
-            WAVES[SEL].color = randColor();
-            WAVES[SEL].shadowColor = {WAVES[SEL].color[1]-0.3,WAVES[SEL].color[2]-0.3,WAVES[SEL].color[2]-0.3}
-        elseif(key == "3")then WAVES[SEL].shadowColor=randColor();
+    else
+        --if(key == "escape")then TITLE = not TITLE
+        --elseif(key == "lalt")then MENU = not MENU
+        --elseif(key == "tab")then addWave();
+        --elseif(key == "2")then --
+        --   WAVES[SEL].color = randColor();
+        --    WAVES[SEL].shadowColor = {WAVES[SEL].color[1]-0.3,WAVES[SEL].color[2]-0.3,WAVES[SEL].color[2]-0.3}
+        if(SEL > 0)then
+            if(key == "space")then WAVES[SEL].SHADOW = not WAVES[SEL].SHADOW --
+            elseif(key == "=")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR + 1; --
+            elseif(key == "-")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR - 1; --
+            elseif(key == "lctrl")then WAVES[SEL].WIREFRAME = not WAVES[SEL].WIREFRAME --
+            elseif(key == "w")then WAVES[SEL].SPLIT_FACTOR = WAVES[SEL].SPLIT_FACTOR + 10; --
+            elseif(key == "s")then WAVES[SEL].SPLIT_FACTOR = WAVES[SEL].SPLIT_FACTOR - 10; --
+	        elseif(key == "d")then WAVES[SEL].HEIGHT = WAVES[SEL].HEIGHT + 10; --
+            elseif(key == "a")then WAVES[SEL].HEIGHT = WAVES[SEL].HEIGHT - 10; --
+            elseif(key == "2")then --
+                WAVES[SEL].color = randColor();
+                WAVES[SEL].shadowColor = {WAVES[SEL].color[1]-0.3,WAVES[SEL].color[2]-0.3,WAVES[SEL].color[2]-0.3}
+            end
+        end
+
+        if(key == "1")then bgColor=randColor();
+        elseif(key == "3")then WAVES[SEL].shadowColor=randColor(); --
         elseif(key == "4")then versionColor=randColor(0.2);
         elseif(key == "5")then highlightColor=randColor();
         elseif(key == "r")then reload();
+        elseif(key == "escape")then TITLE = not TITLE
+        elseif(key == "lalt")then MENU = not MENU
+        elseif(key == "tab")then addWave();
         end
     end
     
@@ -252,29 +272,37 @@ function love.keypressed(key)
 end
 
 function love.wheelmoved(x, y)
-    if(y > 0)then WAVES[SEL].OFFSET = WAVES[SEL].OFFSET - 5
-    elseif(y < 0) then WAVES[SEL].OFFSET = WAVES[SEL].OFFSET + 5
+    if(SEL>0)then
+        if(y > 0)then WAVES[SEL].OFFSET = WAVES[SEL].OFFSET - 5
+        elseif(y < 0) then WAVES[SEL].OFFSET = WAVES[SEL].OFFSET + 5
+        end
     end
 end
 
 function drawMenu()
-    if(NUM_WAVES > 0)then
-        lg.setColor(fontColor);
-        lg.print("[UP/DOWN] SCALE: "..WAVES[SEL].SIN_SCALE,1,0)
-        lg.print("[+/-] MOVE: "..WAVES[SEL].MOVE_FACTOR,1,16)
-        lg.print("[</>] FREQ: "..WAVES[SEL].FREQ,1,32)
-        lg.print("[A/D] HEIGHT: "..WAVES[SEL].HEIGHT,1,48)
-        lg.print("[LCTRL] WIRE: "..(WAVES[SEL].WIREFRAME and ('['..WAVES[SEL].SPLIT_FACTOR..' NODES, W/S to mod]') or 'LO'), 1, 64)
-        lg.print("[TAB] NEW WAVE: "..NUM_WAVES, 1, 80)
-        lg.print("FULLSCRN [ENTER]", w/2, 16)
-        lg.print((WAVES[SEL].SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-162, 16)
-        lg.print("__COLORS__", w/2-97, 32)
-        lg.printf({{bgColor[1]+0.2, bgColor[2]+0.2, bgColor[3]+0.2}, "[1]", WAVES[SEL].color, "[2]", WAVES[SEL].shadowColor, "[3]", versionColor, "[4]", highlightColor, "[5]"}, w/2-98, 48, 200)
+        if(NUM_WAVES > 0)then
+            if(SEL > 0)then
+                lg.setColor(fontColor);
+                lg.print("[UP/DOWN] SCALE: "..WAVES[SEL].SIN_SCALE,1,0)
+                lg.print("[+/-] MOVE: "..WAVES[SEL].MOVE_FACTOR,1,16)
+                lg.print("[</>] FREQ: "..WAVES[SEL].FREQ,1,32)
+                lg.print("[A/D] HEIGHT: "..WAVES[SEL].HEIGHT,1,48)
+                lg.print("[LCTRL] WIRE: "..(WAVES[SEL].WIREFRAME and ('['..WAVES[SEL].SPLIT_FACTOR..' NODES, W/S to mod]') or 'LO'), 1, 64)
+                lg.print("[TAB] NEW WAVE: "..NUM_WAVES, 1, 80)
+                lg.print("FULLSCRN [ENTER]", w/2, 16)
+                lg.print((WAVES[SEL].SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-162, 16)
+                lg.print("__COLORS__", w/2-97, 32)
+                lg.printf({{bgColor[1]+0.2, bgColor[2]+0.2, bgColor[3]+0.2}, "[1]", WAVES[SEL].color, "[2]", WAVES[SEL].shadowColor, "[3]", versionColor, "[4]", highlightColor, "[5]"}, w/2-98, 48, 200)
 
-        lg.printf({WAVES[SEL].color, "y = ", highlightColor, WAVES[SEL].OFFSET-20, WAVES[SEL].color, " + SIN(x * ", highlightColor, WAVES[SEL].FREQ, WAVES[SEL].color, " + ", highlightColor, WAVES[SEL].MOVE_FACTOR, WAVES[SEL].color, ") * ", highlightColor, WAVES[SEL].SIN_SCALE}, 2, h/2-32, w, center)
-    else
-        lg.printf({versionColor, "No waves! [TAB] to add"}, 2, h/2-32, 200);
-    end
+                lg.printf({WAVES[SEL].color, "y = ", highlightColor, WAVES[SEL].OFFSET-20, WAVES[SEL].color, " + SIN(x * ", highlightColor, WAVES[SEL].FREQ, WAVES[SEL].color, " + ", highlightColor, WAVES[SEL].MOVE_FACTOR, WAVES[SEL].color, ") * ", highlightColor, WAVES[SEL].SIN_SCALE}, 2, h/2-32, w, center)
+            else
+                lg.setColor(fontColor);
+                lg.printf({versionColor, "No wave selected"},  2, h/2-32, 200);
+            end
+        else
+            lg.printf({versionColor, "No waves! [TAB] to add"}, 2, h/2-32, 200);
+        end
+        
     lg.setColor(0.5,0.5,0.5);
     lg.print("made by puzzel 2022", 2, h/2-16)
 end
@@ -282,7 +310,7 @@ end
 function drawTitle()
     lg.setBackgroundColor(bgColor);
     titleSplash:setFilter("linear", "nearest");
-    lg.setColor(WAVES[SEL].color);
+    lg.setColor(fontColor);
     lg.draw(titleSplash, (w/2-titleSplash:getPixelWidth())/2-40, h/15, 0, 1.5, 1.5) --1.5
     lg.print("[SPACE]", w/4-28, h/2-50)
     
