@@ -113,7 +113,7 @@ function reload()
     font:setFilter("linear", "nearest")
 end
 
-function playSelect(sound)
+function playSound(sound)
     soundTick = lm.random()
     if(AUDIO_TIMER < 0)then
         if(soundTick < 0.3) then sound[1]:play()
@@ -138,18 +138,18 @@ function love.update(dt)
     if(not TITLE)then
         if(lk.isDown("up"))then
             WAVES[SEL].SIN_SCALE = WAVES[SEL].SIN_SCALE + 2;
-            playSelect(synthSnd)
+            playSound(synthSnd)
         elseif(lk.isDown("down"))then
             WAVES[SEL].SIN_SCALE = WAVES[SEL].SIN_SCALE - 2;
-            playSelect(synthSnd)
+            playSound(synthSnd)
         end
         -- frequency
         if(lk.isDown("right"))then
             WAVES[SEL].FREQ = WAVES[SEL].FREQ +(0.005);
-            playSelect(synthSnd)
+            playSound(synthSnd)
         elseif(lk.isDown("left"))then
             WAVES[SEL].FREQ = WAVES[SEL].FREQ - (0.005);
-            playSelect(synthSnd)
+            playSound(synthSnd)
         end
     end
 
@@ -179,7 +179,10 @@ function love.update(dt)
                 if(mouseY > WAVES[i].points[x] and mouseY < WAVES[i].points[x]+WAVES[i].HEIGHT)then
                     WAVES[i].HOVER = true;
                     locked = true;
-                    if(lms.isDown(1))then SEL = i end
+                    if(lms.isDown(1))then 
+                        SEL = i;
+                        playSound(selectSnd);
+                    end
                 else
                     WAVES[i].HOVER = false;
                 end
@@ -212,7 +215,7 @@ function love.keypressed(key)
             MENU = false;
         end
     elseif(not TITLE)then
-        playSelect(selectSnd)
+        playSound(selectSnd)
         if(key == "escape")then TITLE = not TITLE
         elseif(key == "space")then WAVES[SEL].SHADOW = not WAVES[SEL].SHADOW
         elseif(key == "=")then WAVES[SEL].MOVE_FACTOR = WAVES[SEL].MOVE_FACTOR + 1;
