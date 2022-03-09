@@ -38,6 +38,7 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
 |ENTER/F11| Toggles **fullscreen** (dynamic resolution)|
 |ALT| Toggles the visibility of **menus**|
 |ESCAPE| returns to **title screen** or **Closes** the program|
+|R| Resets the engine |
 
 ### Color Controls
 |KEY|Linked Color|
