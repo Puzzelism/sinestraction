@@ -52,3 +52,5 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
 ## What are you waiting for?
 
 You can find the latest distributed version at the [releases page](https://github.com/Puzzelism/sinestraction/releases) here on github
+
+This project is made using [LÖVE v11.4](https://img.shields.io/badge/Version-1.0.2-9F2B68?style=for-the-badge) so if you know what you're doing you can build the project from the main or rolling dev-branches.
