@@ -1,5 +1,5 @@
 # Sinestraction
-![Version - 0.1.5](https://img.shields.io/badge/Version-0.1.5-9F2B68?style=for-the-badge)
+![Version - 1.0.0](https://img.shields.io/badge/Version-1.0.0-9F2B68?style=for-the-badge)
 
 **Sinestraction** is the latest craze melting brains throughout schools everywhere
 
@@ -10,7 +10,7 @@ Math is a boring construct made by Big Education to turn you into an assembly li
 
 For too long the beauty of mathematics has been gate kept by nobel laureates. Now for the first time ever, thanks to **Sinestraction** you can enjoy the miracle of numbers for yourself.
 
-![Demo!](https://media.giphy.com/media/MDDlbpnA3mSVbRhybS/giphy.gif)
+![Demo!](https://media.giphy.com/media/THJzN5uQEIvSrdSjM3/giphy.gif)
 
 Watch the waves *dance* as you gleam on in envy with a boatload of features, including but not limited to
 
