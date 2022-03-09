@@ -168,27 +168,35 @@ function love.update(dt)
             sined = WAVES[i].OFFSET+(math.sin(x*WAVES[i].FREQ+WAVES[i].move)*WAVES[i].SIN_SCALE)
             WAVES[i].points[x] = (lg.getHeight()/4)-20 + sined;
         end
+        if(TITLE)then WAVES[i].HOVER = false end
     end
 
     -- collision detection for waves (seperate for layering)
     locked = false;
-    for i=NUM_WAVES,1,-1 do
-        for x=0,WAVES[i].SPLIT_FACTOR do
-            if(locked == false)then
-            if(mouseX > x*WAVES[i].sliceW and mouseX < x*WAVES[i].sliceW+WAVES[i].sliceW)then
-                if(mouseY > WAVES[i].points[x] and mouseY < WAVES[i].points[x]+WAVES[i].HEIGHT)then
-                    WAVES[i].HOVER = true;
-                    locked = true;
-                    if(lms.isDown(1))then 
-                        SEL = i;
-                        playSound(selectSnd);
+    if(TITLE == false)then
+        for i=NUM_WAVES,1,-1 do
+            for x=0,WAVES[i].SPLIT_FACTOR do
+                if(locked == false)then
+                    if(mouseX > x*WAVES[i].sliceW and mouseX < x*WAVES[i].sliceW+WAVES[i].sliceW)then
+                    if(mouseY > WAVES[i].points[x] and mouseY < WAVES[i].points[x]+WAVES[i].HEIGHT)then
+                        WAVES[i].HOVER = true;
+                        locked = true;
+                        if(lms.isDown(1))then 
+                            SEL = i
+                            playSound(selectSnd);
+                        elseif(lms.isDown(2))then
+                            SEL = i-1
+                            playSound(selectSnd);
+                            table.remove(WAVES, i);
+                            NUM_WAVES = NUM_WAVES - 1;
+                        end
+                    else
+                        WAVES[i].HOVER = false;
                     end
-                else
-                    WAVES[i].HOVER = false;
                 end
             end
-            end
         end
+    end
     end
 end
 
@@ -250,22 +258,25 @@ function love.wheelmoved(x, y)
 end
 
 function drawMenu()
-    lg.setColor(fontColor);
-    lg.print("[UP/DOWN] SCALE: "..WAVES[SEL].SIN_SCALE,1,0)
-    lg.print("[+/-] MOVE: "..WAVES[SEL].MOVE_FACTOR,1,16)
-    lg.print("[</>] FREQ: "..WAVES[SEL].FREQ,1,32)
-    lg.print("[A/D] HEIGHT: "..WAVES[SEL].HEIGHT,1,48)
-    lg.print("[LCTRL] WIRE: "..(WAVES[SEL].WIREFRAME and ('['..WAVES[SEL].SPLIT_FACTOR..' NODES, W/S to mod]') or 'LO'), 1, 64)
-    lg.print("[TAB] NEW WAVE: "..NUM_WAVES, 1, 80)
-    lg.print("FULLSCRN [ENTER]", w/2, 16)
-    lg.print((WAVES[SEL].SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-162, 16)
-    lg.print("__COLORS__", w/2-97, 32)
-    lg.printf({{bgColor[1]+0.2, bgColor[2]+0.2, bgColor[3]+0.2}, "[1]", WAVES[SEL].color, "[2]", WAVES[SEL].shadowColor, "[3]", versionColor, "[4]", highlightColor, "[5]"}, w/2-98, 48, 200)
+    if(NUM_WAVES > 0)then
+        lg.setColor(fontColor);
+        lg.print("[UP/DOWN] SCALE: "..WAVES[SEL].SIN_SCALE,1,0)
+        lg.print("[+/-] MOVE: "..WAVES[SEL].MOVE_FACTOR,1,16)
+        lg.print("[</>] FREQ: "..WAVES[SEL].FREQ,1,32)
+        lg.print("[A/D] HEIGHT: "..WAVES[SEL].HEIGHT,1,48)
+        lg.print("[LCTRL] WIRE: "..(WAVES[SEL].WIREFRAME and ('['..WAVES[SEL].SPLIT_FACTOR..' NODES, W/S to mod]') or 'LO'), 1, 64)
+        lg.print("[TAB] NEW WAVE: "..NUM_WAVES, 1, 80)
+        lg.print("FULLSCRN [ENTER]", w/2, 16)
+        lg.print((WAVES[SEL].SHADOW and 'HI' or 'LO').." SHADOWS [SPACE]", w/2-162, 16)
+        lg.print("__COLORS__", w/2-97, 32)
+        lg.printf({{bgColor[1]+0.2, bgColor[2]+0.2, bgColor[3]+0.2}, "[1]", WAVES[SEL].color, "[2]", WAVES[SEL].shadowColor, "[3]", versionColor, "[4]", highlightColor, "[5]"}, w/2-98, 48, 200)
 
-    lg.printf({WAVES[SEL].color, "y = ", highlightColor, WAVES[SEL].OFFSET-20, WAVES[SEL].color, " + SIN(x * ", highlightColor, WAVES[SEL].FREQ, WAVES[SEL].color, " + ", highlightColor, WAVES[SEL].MOVE_FACTOR, WAVES[SEL].color, ") * ", highlightColor, WAVES[SEL].SIN_SCALE}, w/4-94, h/2-32, w, center)
-
+        lg.printf({WAVES[SEL].color, "y = ", highlightColor, WAVES[SEL].OFFSET-20, WAVES[SEL].color, " + SIN(x * ", highlightColor, WAVES[SEL].FREQ, WAVES[SEL].color, " + ", highlightColor, WAVES[SEL].MOVE_FACTOR, WAVES[SEL].color, ") * ", highlightColor, WAVES[SEL].SIN_SCALE}, 2, h/2-32, w, center)
+    else
+        lg.printf({versionColor, "No waves! [TAB] to add"}, 2, h/2-32, 200);
+    end
     lg.setColor(0.5,0.5,0.5);
-    lg.print("made by puzzel 2022", w/4-64, h/2-16)
+    lg.print("made by puzzel 2022", 2, h/2-16)
 end
 
 function drawTitle()
