@@ -16,7 +16,7 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
 
  - Adjustable **scale**, and **frequency!**
  - Dynamic **resolution** to be as big as your heart (or your monitor) can take!
- - Play with the smoothing of the graph by adjusting the **split factor!**
+ - Play with the smoothing of functions by adjusting the **split factor!**
  - **Stop, start and speed up** time as you see fit!
  - Add **additional waves** so the party never ends!
  - See the action up close and personal with **wireframes!**
@@ -35,7 +35,7 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
 |A/D| Modifies the **height** of the function|
 |MOUSEWHEEL| Changes the **offset** of the wave |
 |L-SHIFT| Change the waves fill mode to **wireframe**|
-|TAB| Enable the rendering of a complementary **cosine** wave|
+|TAB| Add **MORE** waves!
 |SPACE| Enable or disable **drop shadows** on wave|
 |ENTER/F11| Toggles **fullscreen** (dynamic resolution)|
 |ALT| Toggles the visibility of **menus**|
@@ -46,10 +46,9 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
 |--|--|
 |1| The background |
 |2| The sine wave (also changes shadow)|
-|3| The cos wave |
-|4| The shadow color |
-|5| FPS count color |
-|6| Highlights on the functional view |
+|3| Override the shadow color |
+|4| Change the FPS color |
+|6| Change the color of values in function view |
 
 ## What are you waiting for?
 
