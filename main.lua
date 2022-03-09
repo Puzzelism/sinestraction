@@ -12,7 +12,7 @@ la = love.audio;
 lms = love.mouse;
 
 -- version
-VERSION = "0.1.5";
+VERSION = "1.0.0";
 
 --colors
 function resetColors()
@@ -273,7 +273,7 @@ function drawTitle()
     lg.print("[SPACE]", w/4-28, h/2-50)
     
     lg.setColor(versionColor);
-    lg.print("v"..VERSION, w/4, h/15+30);
+    lg.print("v"..VERSION, w/4-25, h/15+35);
 end
 
 function drawWaves()
