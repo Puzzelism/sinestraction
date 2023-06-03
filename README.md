@@ -3,6 +3,8 @@
 
 **Sinestraction** is the latest craze melting brains throughout schools everywhere
 
+![titlescreen](https://github.com/Puzzelism/sinestraction/blob/main/res/ss2.png)
+
 # Listen
 Math is a boring construct made by Big Education to turn you into an assembly line worker- *BUT* it's also really cool to look at...
 
@@ -22,6 +24,9 @@ Watch the waves *dance* as you gleam on in envy with a boatload of features, inc
  - Observe the numbers doing their thing with the **function visualizer!**
 
  Not to mention so much more to come!
+ 
+## Screenshot
+![screenshot](https://github.com/Puzzelism/sinestraction/blob/main/res/ss1.png)
 
 ## Controls
 |Command|Function|
